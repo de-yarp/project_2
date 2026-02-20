@@ -1,5 +1,5 @@
 [project]
-name = "project-1"
+name = "project-2"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -9,5 +9,23 @@ dependencies = [
     "pyarrow>=23.0.0",
     "pytest>=9.0.2",
     "requests>=2.32.5",
+    "tenacity>=9.1.4",
     "typer>=0.23.1",
 ]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+tabdiff = "rates_stat.cli:app"
+
+[tool.pytest.ini_options]
+# Specifies the directories to search for tests
+testpaths = ["tests"]

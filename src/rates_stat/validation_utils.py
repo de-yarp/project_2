@@ -55,6 +55,10 @@ def normalize_dates(date_from: str, date_to: str) -> tuple[dt.date, dt.date]:
         msg = f"date_from/date_to: unsupported format {date_from}, {date_to}"
         raise IOContractError(msg)
 
+    if dt_from > dt_to:
+        msg = f"date_from/date_to: invalid position {date_from}, {date_to} date_from > date_to"
+        raise IOContractError(msg)
+
     return dt_from, dt_to
 
 

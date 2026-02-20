@@ -3,8 +3,11 @@ from typing import Annotated
 
 import typer
 
+from .log_utils import setup_logging
 from .models import Args
 from .validation_utils import normalize_args, validate_args
+
+logger = setup_logging("rates_stat")
 
 app = typer.Typer()
 

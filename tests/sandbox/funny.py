@@ -1,4 +1,8 @@
+import datetime as dt
+
 import requests
+
+from rates_stat.request_core import fetch_rates
 
 
 def get_available_cur_pool() -> None:
@@ -7,4 +11,9 @@ def get_available_cur_pool() -> None:
 
 
 if __name__ == "__main__":
-    get_available_cur_pool()
+    dt_from = dt.date.fromisoformat("2025-11-23")
+    dt_to = dt.date.fromisoformat("2025-11-29")
+    base = "EUR"
+    pool = ["PLN", "HUF"]
+    resp = fetch_rates(base, pool, dt_from, dt_to)
+    print(resp.json())

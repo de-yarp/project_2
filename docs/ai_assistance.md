@@ -4,3 +4,10 @@
 2) if an error has an explicit name, like IOContractError should it's message include it again? what is the typical contract?
 3) can i make a separate command to print some help info i need?
 4) i want to support multiple date templates. for that i need a container of them. is it better to keep it as a set for more optimised membership check or to make it a list to mainatain a specific order: from most to least frequently used?
+5) shoul i still raise, even if i log errors? how is everything connected?
+6) how to structure a log line?
+7) uuid64 vs hash?
+8) so a new logger for EVERY SINGLE FILE? or what..... LIKE HOW IS IT SO FUCKING CONFUSING
+9) what is the difference between logger.info() and logger.log()?
+10) *A LOT of questions about logging*
+11) *A LOT of questions about web/api requests*
