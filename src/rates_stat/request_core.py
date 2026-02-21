@@ -1,8 +1,10 @@
 import datetime as dt
 import logging
-from time import perf_counter  # noqa: F401
+import time  # noqa: F401
+from pathlib import Path
 
 import requests as req
+from joblib import Memory
 from requests.exceptions import ConnectionError, HTTPError, Timeout  # noqa: F401
 from tenacity import (
     retry,
@@ -11,6 +13,10 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
 )
+
+TTL = 86400
+CACHE_DIR = Path(".rates_cache")
+memory = Memory(location=CACHE_DIR, verbose=0)
 
 logger = logging.Logger(__name__)
 
@@ -30,7 +36,7 @@ def is_retryable(response: req.Response) -> bool:
     ),
     reraise=True,
 )
-def fetch_rates(
+def _fetch_rates(
     base: str, pool: list[str], dt_from: dt.date, dt_to: dt.date
 ) -> req.Response:
     date_from = dt_from.isoformat()
@@ -52,3 +58,14 @@ def fetch_rates(
         raise HTTPError(msg) from e
 
     return resp
+
+
+@memory.cache
+def fetch_rates(base: str, pool: list[str], dt_from: dt.date, dt_to: dt.date) -> dict:
+    return _fetch_rates(base, pool, dt_from, dt_to).json()
+
+
+def get_rates(base: str, pool: list[str], dt_from: dt.date, dt_to: dt.date) -> dict:
+    if CACHE_DIR.exists() and (time.time() - CACHE_DIR.stat().st_mtime) > TTL:
+        memory.clear()
+    return fetch_rates(base, pool, dt_from, dt_to)

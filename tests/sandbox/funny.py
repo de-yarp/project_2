@@ -2,7 +2,8 @@ import datetime as dt
 
 import requests
 
-from rates_stat.request_core import fetch_rates
+from rates_stat.request_core import get_rates
+from rates_stat.transform import response_to_dataframe
 
 
 def get_available_cur_pool() -> None:
@@ -15,5 +16,6 @@ if __name__ == "__main__":
     dt_to = dt.date.fromisoformat("2025-11-29")
     base = "EUR"
     pool = ["PLN", "HUF"]
-    resp = fetch_rates(base, pool, dt_from, dt_to)
-    print(resp.json())
+    resp = get_rates(base, pool, dt_from, dt_to)
+    df = response_to_dataframe(resp)
+    print(df)
