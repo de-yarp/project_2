@@ -1,5 +1,8 @@
-import datetime as dt  # noqa: F401
+import datetime as dt
 from pathlib import Path
+
+import holidays
+import pandas as pd
 
 from .models import AVAILABLE_CURRENCIES, Args, IOContractError
 
@@ -56,7 +59,16 @@ def normalize_dates(date_from: str, date_to: str) -> tuple[dt.date, dt.date]:
         raise IOContractError(msg)
 
     if dt_from > dt_to:
-        msg = f"date_from/date_to: invalid position {date_from}, {date_to} date_from > date_to"
+        msg = f"date_from/date_to: invalid positioning {date_from}, {date_to} date_from > date_to"
+        raise IOContractError(msg)
+
+    ecb_calendar = holidays.financial_holidays(
+        "TARGET2", years=[y for y in range(dt_from.year, dt_to.year + 1)]
+    )
+    ecb_business_day = pd.offsets.CustomBusinessDay(holidays=list(ecb_calendar.keys()))
+    dt_range = pd.date_range(start=dt_from, end=dt_to, freq=ecb_business_day)
+    if len(dt_range) < 1:
+        msg = f"date_from/date_to: range ({dt_from.isoformat}..{dt_to.isoformat()}) is empty. \ntip: check for ECB holidays in range"
         raise IOContractError(msg)
 
     return dt_from, dt_to

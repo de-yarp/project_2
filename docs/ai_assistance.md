@@ -11,3 +11,5 @@
 9) what is the difference between logger.info() and logger.log()?
 10) *A LOT of questions about logging*
 11) *A LOT of questions about web/api requests*
+12) *Trying to get a custom business date range for dates validation*
+13) *A LOT of questions about schema, schema report and ingestion contract*

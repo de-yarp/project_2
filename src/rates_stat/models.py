@@ -2,6 +2,8 @@ import datetime as dt
 from dataclasses import dataclass
 from pathlib import Path
 
+import holidays
+
 AVAILABLE_CURRENCIES: set[str] = {
     "AUD",
     "BRL",
@@ -68,6 +70,8 @@ CURRENCIES_MAP: dict[str, str] = {
     "USD": "United States Dollar",
     "ZAR": "South African Rand",
 }
+
+ECB_HOLIDAYS = holidays.financial_holidays("TARGET2")
 
 
 @dataclass(frozen=True)
