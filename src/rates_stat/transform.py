@@ -13,5 +13,6 @@ def response_to_dataframe(resp: dict) -> pd.DataFrame:
     )
     base_s = pd.Series([base for _ in range(len(rates_df))])
     rates_df["base"] = base_s
+    rates_df["date"] = pd.to_datetime(rates_df["date"], errors="coerce")
 
     return rates_df

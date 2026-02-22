@@ -1,0 +1,14 @@
+{
+  "row_count": "DYNAMIC",
+  "columns": {
+    "required": ["date", "currency", "rate", "base"],
+    "dtypes": {
+      "date": "datetime64[us]",
+      "currency": "str",
+      "rate": "float64",
+      "base": "str"
+    },
+    "missing": { "date": 0, "currency": 0, "rate": 0, "base": 0 },
+    "date_fmt": "%Y-%m-%d"
+  }
+}

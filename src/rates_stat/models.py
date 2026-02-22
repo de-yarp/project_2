@@ -89,3 +89,9 @@ class IOContractError(Exception):
     """arguments, overwrite"""
 
     exit_code = 3
+
+
+class SchemaError(Exception):
+    """unexpected schema drift"""
+
+    exit_code = 4

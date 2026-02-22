@@ -3,6 +3,7 @@ import datetime as dt
 import requests
 
 from rates_stat.request_core import get_rates
+from rates_stat.schema_report import get_schema_report_api
 from rates_stat.transform import response_to_dataframe
 
 
@@ -19,3 +20,5 @@ if __name__ == "__main__":
     resp = get_rates(base, pool, dt_from, dt_to)
     df = response_to_dataframe(resp)
     print(df)
+    report = get_schema_report_api(df)
+    print(report)

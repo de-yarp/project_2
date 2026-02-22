@@ -1,11 +1,11 @@
 import datetime as dt
 import logging
-import time  # noqa: F401
+import time
 from pathlib import Path
 
 import requests as req
 from joblib import Memory
-from requests.exceptions import ConnectionError, HTTPError, Timeout  # noqa: F401
+from requests.exceptions import ConnectionError, HTTPError, Timeout
 from tenacity import (
     retry,
     retry_if_exception_type,
