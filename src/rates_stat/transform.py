@@ -1,5 +1,3 @@
-import datetime as dt  # noqa: F401
-
 import pandas as pd
 
 
@@ -9,10 +7,40 @@ def response_to_dataframe(resp: dict) -> pd.DataFrame:
 
     rates_df = pd.DataFrame().from_dict(rates, orient="index")
     rates_df = rates_df.reset_index(names="date").melt(
-        id_vars="date", var_name="currency", value_name="rate"
+        id_vars="date", var_name="currency_code", value_name="rate"
     )
     base_s = pd.Series([base for _ in range(len(rates_df))])
     rates_df["base"] = base_s
     # rates_df["date"] = pd.to_datetime(rates_df["date"], errors="coerce")
 
     return rates_df
+
+
+def get_api_agg(df: pd.DataFrame) -> pd.DataFrame:
+    df_agg = (
+        df.groupby(by=["currency_code", "base"])
+        .agg(
+            date_from=pd.NamedAgg(column="date", aggfunc="min"),
+            date_to=pd.NamedAgg(column="date", aggfunc="max"),
+            mean=pd.NamedAgg(column="rate", aggfunc="mean"),
+            min=pd.NamedAgg(column="rate", aggfunc="min"),
+            max=pd.NamedAgg(column="rate", aggfunc="max"),
+            volatility=pd.NamedAgg(column="rate", aggfunc="std"),
+        )
+        .reset_index()
+    )
+    df_agg["spread"] = df_agg["max"] - df_agg["min"]
+
+    return df_agg
+
+
+def merge_api_agg_legacy(df_agg: pd.DataFrame, df_legacy: pd.DataFrame) -> pd.DataFrame:
+    return df_agg.merge(df_legacy, how="left", on="currency_code").sort_values(
+        by="currency_code"
+    )
+
+
+def merge_and_aggregate(df_api: pd.DataFrame, df_legacy: pd.DataFrame) -> pd.DataFrame:
+    df_agg = get_api_agg(df_api)
+
+    return merge_api_agg_legacy(df_agg, df_legacy)

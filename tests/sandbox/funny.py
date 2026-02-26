@@ -10,7 +10,7 @@ from rates_stat.models import (
     LEGACY_INGESTION_CONTRACT_PATH,
 )
 from rates_stat.request_core import get_rates
-from rates_stat.transform import response_to_dataframe
+from rates_stat.transform import merge_and_aggregate, response_to_dataframe
 from rates_stat.validation_utils import normalize_dates
 
 
@@ -46,4 +46,10 @@ if __name__ == "__main__":
     validate_ingestion_contract(
         df_api, df_legacy, api_contract, legacy_contract, dt_count, cur_count
     )
-    print("OK")
+    print("OK\n")
+    # print(df_api.info())
+    df_merged = merge_and_aggregate(df_api, df_legacy)
+
+    print(df_merged)
+    print(df_merged.info())
+    print(df_merged.columns.duplicated().any())
