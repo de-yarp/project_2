@@ -33,7 +33,7 @@ def validate_currencies(base: str, pool: list[str]) -> None:
         msg = "pool: contains unsupported currencies, see [uv run rates_stat info] for available currencies"
 
 
-def normalize_dates(date_from: str, date_to: str) -> tuple[dt.date, dt.date]:
+def normalize_dates(date_from: str, date_to: str) -> tuple[dt.date, dt.date, int]:
     dt_templates = [
         "%Y-%m-%d",
         "%Y/%m/%d",
@@ -49,8 +49,8 @@ def normalize_dates(date_from: str, date_to: str) -> tuple[dt.date, dt.date]:
     dt_to = None
     for t in dt_templates:
         try:
-            dt_from = dt.datetime.strptime(date_from, t).date()
-            dt_to = dt.datetime.strptime(date_to, t).date()
+            dt_from = dt.datetime.strptime(date_from, t)
+            dt_to = dt.datetime.strptime(date_to, t)
             break
         except ValueError:
             continue
@@ -63,15 +63,22 @@ def normalize_dates(date_from: str, date_to: str) -> tuple[dt.date, dt.date]:
         raise IOContractError(msg)
 
     ecb_calendar = holidays.financial_holidays(
-        "TARGET2", years=[y for y in range(dt_from.year, dt_to.year + 1)]
+        "XECB", years=[y for y in range(dt_from.year, dt_to.year + 1)]
     )
     ecb_business_day = pd.offsets.CustomBusinessDay(holidays=list(ecb_calendar.keys()))
+
+    # fallback in case dt_from is not a business day to always include a 1-business-day-before policy
+    dt_from = ecb_business_day.rollback(dt_from)
+
     dt_range = pd.date_range(start=dt_from, end=dt_to, freq=ecb_business_day)
     if len(dt_range) < 1:
         msg = f"date_from/date_to: range ({dt_from.isoformat}..{dt_to.isoformat()}) is empty. \ntip: check for ECB holidays in range"
         raise IOContractError(msg)
 
-    return dt_from, dt_to
+    dt_from = dt_range[0].date()
+    dt_to = dt_range[-1].date()
+
+    return dt_from, dt_to, len(dt_range)
 
 
 def normalize_currencies(base: str, pool: list[str]) -> tuple[str, list[str]]:
@@ -82,7 +89,7 @@ def normalize_currencies(base: str, pool: list[str]) -> tuple[str, list[str]]:
 
 
 def normalize_args(date_from: str, date_to: str, base: str, pool: list[str]) -> dict:
-    dt_from, dt_to = normalize_dates(date_from, date_to)
+    dt_from, dt_to, _ = normalize_dates(date_from, date_to)
     base_norm, pool_norm = normalize_currencies(base, pool)
 
     return {

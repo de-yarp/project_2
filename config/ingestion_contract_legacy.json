@@ -1,0 +1,32 @@
+{
+  "row_count": 30,
+  "columns": {
+    "required": [
+      "currency_code",
+      "currency_name",
+      "currency_group",
+      "region",
+      "sub_region",
+      "is_major",
+      "decimal_places"
+    ],
+    "dtypes": {
+      "currency_code": "str",
+      "currency_name": "str",
+      "currency_group": "str",
+      "region": "str",
+      "sub_region": "str",
+      "is_major": "bool",
+      "decimal_places": "int64"
+    },
+    "missing_percent": {
+      "currency_code": 0,
+      "currency_name": 0,
+      "currency_group": 0,
+      "region": 0,
+      "sub_region": 0,
+      "is_major": 0,
+      "decimal_places": 0
+    }
+  }
+}

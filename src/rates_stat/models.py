@@ -2,8 +2,6 @@ import datetime as dt
 from dataclasses import dataclass
 from pathlib import Path
 
-import holidays
-
 AVAILABLE_CURRENCIES: set[str] = {
     "AUD",
     "BRL",
@@ -71,7 +69,8 @@ CURRENCIES_MAP: dict[str, str] = {
     "ZAR": "South African Rand",
 }
 
-ECB_HOLIDAYS = holidays.financial_holidays("TARGET2")
+API_INGESTION_CONTRACT_PATH = Path("config") / "ingestion_contract_api.json"
+LEGACY_INGESTION_CONTRACT_PATH = Path("config") / "ingestion_contract_legacy.json"
 
 
 @dataclass(frozen=True)
@@ -92,6 +91,6 @@ class IOContractError(Exception):
 
 
 class SchemaError(Exception):
-    """unexpected schema drift"""
+    """unexpected schema drift/ingestion contract file corrupted"""
 
     exit_code = 4

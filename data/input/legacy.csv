@@ -1,0 +1,31 @@
+currency_code,currency_name,currency_group,region,sub_region,is_major,decimal_places
+AUD,Australian Dollar,commodity,Asia-Pacific,Oceania,true,2
+BRL,Brazilian Real,emerging,Americas,South America,false,2
+CAD,Canadian Dollar,commodity,Americas,North America,true,2
+CHF,Swiss Franc,safe_haven,Europe,Western Europe,true,2
+CNY,Chinese Yuan,emerging,Asia-Pacific,East Asia,false,2
+CZK,Czech Koruna,european_non_euro,Europe,Central Europe,false,2
+DKK,Danish Krone,european_non_euro,Europe,Northern Europe,false,2
+EUR,Euro,major_reserve,Europe,Eurozone,true,2
+GBP,British Pound,major_reserve,Europe,Western Europe,true,2
+HKD,Hong Kong Dollar,pegged,Asia-Pacific,East Asia,false,2
+HUF,Hungarian Forint,european_non_euro,Europe,Central Europe,false,2
+IDR,Indonesian Rupiah,emerging,Asia-Pacific,Southeast Asia,false,0
+ILS,Israeli Shekel,emerging,Middle East,Middle East,false,2
+INR,Indian Rupee,emerging,Asia-Pacific,South Asia,false,2
+ISK,Icelandic Krona,european_non_euro,Europe,Northern Europe,false,0
+JPY,Japanese Yen,safe_haven,Asia-Pacific,East Asia,true,0
+KRW,South Korean Won,emerging,Asia-Pacific,East Asia,false,0
+MXN,Mexican Peso,emerging,Americas,North America,false,2
+MYR,Malaysian Ringgit,emerging,Asia-Pacific,Southeast Asia,false,2
+NOK,Norwegian Krone,commodity,Europe,Northern Europe,false,2
+NZD,New Zealand Dollar,commodity,Asia-Pacific,Oceania,false,2
+PHP,Philippine Peso,emerging,Asia-Pacific,Southeast Asia,false,2
+PLN,Polish Zloty,european_non_euro,Europe,Central Europe,false,2
+RON,Romanian Leu,european_non_euro,Europe,Central Europe,false,2
+SEK,Swedish Krona,european_non_euro,Europe,Northern Europe,false,2
+SGD,Singapore Dollar,emerging,Asia-Pacific,Southeast Asia,false,2
+THB,Thai Baht,emerging,Asia-Pacific,Southeast Asia,false,2
+TRY,Turkish Lira,emerging,Europe,Southern Europe,false,2
+USD,US Dollar,major_reserve,Americas,North America,true,2
+ZAR,South African Rand,commodity,Africa,Southern Africa,false,2
