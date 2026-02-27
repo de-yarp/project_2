@@ -13,4 +13,4 @@ wheels/
 notes/
 
 # sanbox
-test/sanbox
+tests/sanbox
