@@ -82,6 +82,7 @@ class Args:
     pool: list[str]
     out: Path
     overwrite: bool
+    dt_count: int
 
 
 class IOContractError(Exception):

@@ -1,13 +1,14 @@
+import json
 import logging
 
 import pandas as pd
 
 from .models import SchemaError
 
-logger = logging.Logger(__name__)
+logger = logging.getLogger(__name__)
 
 
-def get_schema_report(df: pd.DataFrame) -> dict:
+def get_schema_report(df: pd.DataFrame) -> None:
     row_num, col_num = df.shape
     cols = df.columns.to_list()
     cols_dtype = {col: df[col].dtype.name for col in cols}
@@ -19,9 +20,7 @@ def get_schema_report(df: pd.DataFrame) -> dict:
         "columns": {"names": cols, "dtypes": cols_dtype, "missing_count": cols_missing},
     }
 
-    logger.info("ingestion schema report:", extra=extra)
-
-    return extra  # for reference(to be changed later)
+    logger.info(f"ingestion schema report: {json.dumps(extra, indent=2)}")
 
 
 def validate_api_ingestion(

@@ -19,6 +19,10 @@ def get_available_cur_pool() -> None:
     print(curs.keys())
 
 
+def read_print_pq(path: Path) -> None:
+    print(pd.read_parquet(path))
+
+
 if __name__ == "__main__":
     legacy_path = Path("data") / "input" / "legacy.csv"
     dt_from, dt_to, dt_count = normalize_dates("2025-11-23", "2025-11-29")
@@ -50,6 +54,9 @@ if __name__ == "__main__":
     # print(df_api.info())
     df_merged = merge_and_aggregate(df_api, df_legacy)
 
-    print(df_merged)
-    print(df_merged.info())
-    print(df_merged.columns.duplicated().any())
+    # print(df_merged)
+    # print(df_merged.columns)
+    # print(df_merged.columns.duplicated().any())
+
+    pq_path = Path("data") / "output" / "report.parquet"
+    read_print_pq(pq_path)

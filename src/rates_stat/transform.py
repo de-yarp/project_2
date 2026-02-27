@@ -1,4 +1,8 @@
+import logging
+
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 def response_to_dataframe(resp: dict) -> pd.DataFrame:
@@ -11,7 +15,6 @@ def response_to_dataframe(resp: dict) -> pd.DataFrame:
     )
     base_s = pd.Series([base for _ in range(len(rates_df))])
     rates_df["base"] = base_s
-    # rates_df["date"] = pd.to_datetime(rates_df["date"], errors="coerce")
 
     return rates_df
 
@@ -30,6 +33,12 @@ def get_api_agg(df: pd.DataFrame) -> pd.DataFrame:
         .reset_index()
     )
     df_agg["spread"] = df_agg["max"] - df_agg["min"]
+
+    if df_agg["date_from"].iloc[0] == df_agg["date_to"].iloc[0]:
+        logger.warning(
+            "aggregation & merge: date range contains only 1 value -> report.volatility set to 0!"
+        )
+        df_agg.fillna({"volatility": 0}, inplace=True)
 
     return df_agg
 

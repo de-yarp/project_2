@@ -16,21 +16,28 @@ def validate_paths(fin: Path, fout: Path) -> None:
         msg = f"local_data: {str(fin)} not found"
         raise IOContractError(msg)
 
-    if not fout.exists():
-        msg = f"out: {str(fout)} not found"
+    fout_parent = fout.parent
+    if not fout_parent.exists():
+        msg = f"out: parent dir {str(fout_parent)} not found"
         raise IOContractError(msg)
-    if not fout.is_dir():
-        msg = f"out: {str(fout)} is not a directory"
+    if not fout_parent.is_dir():
+        msg = f"out: parent {str(fout_parent)} is not a directory"
+        raise IOContractError(msg)
+
+    if fout.suffix != ".parquet":
+        msg = f"out: invalid suffix '{str(fout.suffix)}', expected '.parquet'"
         raise IOContractError(msg)
 
 
 def validate_currencies(base: str, pool: list[str]) -> None:
     if base not in AVAILABLE_CURRENCIES:
-        msg = "base: unsupported, see [uv run rates_stat info] for available currencies"
+        msg = f"base: '{base}' not supported, see [uv run rates_stat info] for available currencies"
         raise IOContractError(msg)
 
-    if not set(pool).issubset(AVAILABLE_CURRENCIES):
-        msg = "pool: contains unsupported currencies, see [uv run rates_stat info] for available currencies"
+    pool_set = set(pool)
+    if not pool_set.issubset(AVAILABLE_CURRENCIES):
+        msg = f"pool: contains unsupported currencies {list(pool_set - AVAILABLE_CURRENCIES)}, see [uv run rates_stat info] for available currencies"
+        raise IOContractError(msg)
 
 
 def normalize_dates(date_from: str, date_to: str) -> tuple[dt.date, dt.date, int]:
@@ -89,7 +96,7 @@ def normalize_currencies(base: str, pool: list[str]) -> tuple[str, list[str]]:
 
 
 def normalize_args(date_from: str, date_to: str, base: str, pool: list[str]) -> dict:
-    dt_from, dt_to, _ = normalize_dates(date_from, date_to)
+    dt_from, dt_to, dt_count = normalize_dates(date_from, date_to)
     base_norm, pool_norm = normalize_currencies(base, pool)
 
     return {
@@ -97,6 +104,7 @@ def normalize_args(date_from: str, date_to: str, base: str, pool: list[str]) -> 
         "to": dt_to,
         "base": base_norm,
         "pool": pool_norm,
+        "dt_count": dt_count,
     }
 
 
@@ -104,3 +112,38 @@ def validate_args(args: Args) -> None:
     validate_paths(args.local_data, args.out)
 
     validate_currencies(args.base, args.pool)
+
+
+def post_transform_validate(df: pd.DataFrame) -> None:
+    expected_columns = {
+        "currency_code",
+        "base",
+        "date_from",
+        "date_to",
+        "mean",
+        "min",
+        "max",
+        "volatility",
+        "spread",
+        "currency_name",
+        "currency_group",
+        "region",
+        "sub_region",
+        "is_major",
+        "decimal_places",
+    }
+    assert len(df) > 0, "post-transform: df is empty"
+    assert not df["currency_code"].isna().any(), (
+        "post-transform: column 'currency_code' contains nulls"
+    )
+    assert not df["currency_code"].duplicated().any(), (
+        "post-transform: column 'currency_code' is duplicated"
+    )
+    df_cols = set(df.columns)
+    assert df_cols == expected_columns, (
+        f"post-transform: missing columns {list(expected_columns - df_cols)}, extra columns {list(df_cols - expected_columns)}"
+    )
+    for col in ("mean", "min", "max", "volatility", "spread"):
+        assert not df[col].isna().any(), (
+            f"post-transform: column '{col}' contains nulls"
+        )

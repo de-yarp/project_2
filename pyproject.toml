@@ -26,7 +26,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [project.scripts]
-tabdiff = "rates_stat.cli:app"
+rates_stat = "rates_stat.cli:app"
 
 [tool.pytest.ini_options]
 # Specifies the directories to search for tests
