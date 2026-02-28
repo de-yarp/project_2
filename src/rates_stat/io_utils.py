@@ -42,3 +42,4 @@ def safe_write_parquet(df: pd.DataFrame, path: Path) -> None:
     finally:
         if tmp_path and tmp_path.exists():
             tmp_path.unlink(missing_ok=True)
+            raise RuntimeError("safe-write: failed to write report, no data saved")

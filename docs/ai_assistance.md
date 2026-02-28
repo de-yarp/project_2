@@ -14,3 +14,6 @@
 12) *Trying to get a custom business date range for dates validation*
 13) *A LOT of questions about schema, schema report and ingestion contract*
 14) what should happen to std if there is only one date in the range?
+15) *help with the documentation*
+
+## no code directly written by the AI
