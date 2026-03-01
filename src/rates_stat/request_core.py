@@ -1,5 +1,4 @@
 import datetime as dt
-import logging
 import time
 from pathlib import Path
 
@@ -17,8 +16,6 @@ from tenacity import (
 TTL = 86400
 CACHE_DIR = Path(".rates_cache")
 memory = Memory(location=CACHE_DIR, verbose=0)
-
-logger = logging.Logger(__name__)
 
 RETRYABLE_STATUS_CODES = {429, 500, 502, 503, 504}
 

@@ -64,7 +64,7 @@ def validate_api_ingestion(
             )
 
         for col, req_missing_rate in col_info["missing_percent"].items():
-            missing_perc = round(df[col].isna().sum() / 100, 2)
+            missing_perc = round(df[col].isna().mean() * 100, 2)
             req_missing_perc = req_missing_rate / 100
             assert missing_perc <= req_missing_perc, (
                 f"api response missing values percent {{ '{col}': {missing_perc} }} more than expected <{req_missing_perc}>"
@@ -106,7 +106,7 @@ def validate_legacy_ingestion(df: pd.DataFrame, contract: dict) -> None:
             )
 
         for col, req_missing_rate in col_info["missing_percent"].items():
-            missing_perc = round(df[col].isna().sum() / 100, 2)
+            missing_perc = round(df[col].isna().mean() * 100, 2)
             req_missing_perc = req_missing_rate / 100
             assert missing_perc <= req_missing_perc, (
                 f"legacy table missing values percent {{ '{col}': {missing_perc} }} more than expected <{req_missing_perc}>"
